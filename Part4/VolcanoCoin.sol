@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 contract VolcanoCoin {
-    uint totalSupply = 10000;  
+    uint totalSupply = 10000 * (10**decimals());  
     address owner;
     event TotalSupply_set(uint indexed);
     event Transfer(address recipient, uint amount);
@@ -42,8 +42,8 @@ contract VolcanoCoin {
 
     // increment coin total supply by 1000
     function increaseTotalSupply() public onlyOwner {
-        totalSupply = totalSupply + 1000;
-        balance[msg.sender] += 1000;
+        totalSupply = totalSupply + (1000 * (10**decimals()));
+        balance[msg.sender] += (1000 * (10**decimals()));
         emit TotalSupply_set(totalSupply);
     }
 
