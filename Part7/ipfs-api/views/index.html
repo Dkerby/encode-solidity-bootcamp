@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sample Site</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    body { padding-top: 50px; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="jumbotron">
+        <h5 class="display-4">Store Text in IPFS</h5>
+        <div class="form-group">
+            <textarea class="form-control" id="storeTextArea" rows="3" placeholder="Data to send to IPFS"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" onclick="store()">Store Data</button>
+        <hr>
+        <p class="lead">CID of Stored Data:</p>
+        <p id="storedDataCid1" class="lead"></p>
+    </div>
+
+    <div class="jumbotron">
+        <h5 class="display-4">Store Image in IPFS</h5>
+        <div class="form-group">
+            <input type="file" id="fileInput" name="filename">
+        </div>
+        <hr>
+        <p class="lead">CID of Stored Data:</p>
+        <p id="storedDataCid2" class="lead"></p>
+        <p class="lead">Image:</p>
+        <img id="uploadedImage"/>
+    </div>
+
+    <div class="jumbotron">
+        <h5 class="display-4">Get Data From IPFS</h5>
+        <div class="form-group">
+        <input class="form-control" id="retrieveInput" placeholder="CID of Existing IPFS Content">
+        </div>
+        <button type="submit" class="btn btn-primary" onclick="retrieve()">Retrieve Data</button>
+        <hr>
+        <p class="lead">Data Retrieved Using CID:</p>
+        <p id="retrievedData" class="lead"></p>
+        <img id="retrievedImage"/>
+    </div>
+  </div>
+
+</body>
+<script type="text/javascript">
+    const retrieve = () => {
+        var cid = document.getElementById("retrieveInput").value;
+        var apiUrl = `http://localhost:3000/ipfs/${cid}`;
+
+        fetch(apiUrl).then(response => {
+            return response.text();
+        }).then(data => {
+            if(data.includes("base64")) {
+                document.getElementById("retrievedData").innerHTML = "";
+                document.getElementById("retrievedImage").setAttribute('src', data);
+            } else {
+                document.getElementById("retrievedImage").setAttribute('src', "");
+                document.getElementById("retrievedData").innerHTML = data;
+                console.log(data);
+            }
+        }).catch(err => {
+        });
+    }
+
+    const store = () => {
+        var data = document.getElementById("storeTextArea").value;
+        const body = { data: data };
+
+        fetch('http://localhost:3000/ipfs', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+                body: JSON.stringify(body),
+            }
+        )
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            document.getElementById("storedDataCid1").innerHTML = data.cid;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    const handleStoreImage = () => {
+        var fileInput = document.getElementById("fileInput");
+        
+        fileInput.onchange = async (event) => {
+            const toBase64 = file => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+
+            let fileData = await toBase64(fileInput.files[0]);
+
+            const body = { data: fileData };
+
+            // display image on page after upload
+            document.getElementById("uploadedImage").setAttribute('src', fileData);
+
+            // upload image
+            fetch('http://localhost:3000/ipfs', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                    body: JSON.stringify(body),
+                }
+            )
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                document.getElementById("storedDataCid2").innerHTML = data.cid;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    }
+
+    handleStoreImage();
+</script>
+</html>
