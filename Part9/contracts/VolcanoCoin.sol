@@ -11,7 +11,7 @@ contract VolcanoCoin is ERC20("Volcano Coin", "VLC"), Ownable {
     struct Payment{
         uint amount;
         address recipient;
-        }
+    }
 
 
     mapping (address => Payment[]) public payments;
