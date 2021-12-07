@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract VolcanoCoin is ERC20("Volcano Coin", "VLC"), Ownable {
-
+contract VolcanoCoin is ERC20("Volcano Coin", "VLC") {
     uint256  constant initialSupply = 100000;
     uint256 paymentId = 1;
+    address owner;
+    mapping (address => Payment[]) public payments;
 
     enum PaymentType { UNKNOWN, BASIC_PAYMENT, REFUND, DIVIDEND, GROUP_PAYMENT }
 
     struct Payment{
-        uint identifier;
+        uint id;
         uint amount;
         address recipient;
         PaymentType paymentType;
@@ -20,22 +19,28 @@ contract VolcanoCoin is ERC20("Volcano Coin", "VLC"), Ownable {
         string comment;
     }
 
-    mapping (address => Payment[]) public payments;
     event supplyChanged(uint256);
 
     constructor() {
         _mint(msg.sender, initialSupply);
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner {
+        if (msg.sender == owner) {
+            _;
+        }
     }
 
     function transfer(address _recipient, uint _amount) public virtual override returns (bool) {
         _transfer(msg.sender, _recipient, _amount);
-        addPaymentRecord(msg.sender, _recipient, _amount);
+        _addPaymentRecord(msg.sender, _recipient, _amount);
         paymentId++;
         return true;
     }
 
-    function addPaymentRecord(address _sender, address _recipient, uint _amount) internal {
-        const payment = Payment(paymentId, _amount,_recipient,  paymentType.UNKNOWN, block.timestamp, "");
+    function _addPaymentRecord(address _sender, address _recipient, uint _amount) internal {
+        Payment memory payment = Payment(paymentId, _amount,_recipient,  PaymentType.UNKNOWN, block.timestamp, ""));
         payments[_sender].push(payment);
     }
 
@@ -46,5 +51,27 @@ contract VolcanoCoin is ERC20("Volcano Coin", "VLC"), Ownable {
 
     function getPayments(address _user) public view returns (Payment[] memory) {
         return payments[_user];
+    }
+
+    function updatePaymentInfo(uint _paymentId, uint8 _paymentType, string calldata _comment) public {
+        require(payments[msg.sender].length > 0, "You haven't sent any payments yet.");
+        require(_paymentType <= uint8(PaymentType.GROUP_PAYMENT), "Payment type not found.");
+        for(uint i = 0;i < payments[msg.sender].length;i++) {
+            if(payments[msg.sender][i].id == _paymentId) {
+                payments[msg.sender][i].paymentType = PaymentType(_paymentType);
+                payments[msg.sender][i].comment = _comment;
+            }
+        }
+    }
+
+    function updatePaymentType(uint _paymentId, uint8 _paymentType, address _userAddress) public onlyOwner {
+        require(payments[_userAddress].length > 0, "Could not find payments for user address");
+        require(_paymentType <= uint8(PaymentType.GROUP_PAYMENT), "Payment type not found.");
+        for(uint i = 0;i < payments[_userAddress].length;i++) {
+            if(payments[_userAddress][i].id == _paymentId) {
+                payments[_userAddress][i].paymentType = PaymentType(_paymentType);
+                payments[_userAddress][i].comment = string(abi.encodePacked(payments[_userAddress][i].comment, " - updated by: "));
+            }
+        }
     }
 }
