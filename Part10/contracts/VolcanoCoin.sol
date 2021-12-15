@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract VolcanoCoin is ERC20("Volcano Coin", "VLC") {
-    uint256  constant initialSupply = 100000;
+    uint256 constant initialSupply = 100000;
     uint256 paymentId = 1;
     address owner;
     mapping (address => Payment[]) public payments;
@@ -40,7 +40,7 @@ contract VolcanoCoin is ERC20("Volcano Coin", "VLC") {
     }
 
     function _addPaymentRecord(address _sender, address _recipient, uint _amount) internal {
-        Payment memory payment = Payment(paymentId, _amount,_recipient,  PaymentType.UNKNOWN, block.timestamp, ""));
+        Payment memory payment = Payment(paymentId, _amount,_recipient, PaymentType.UNKNOWN, block.timestamp, "");
         payments[_sender].push(payment);
     }
 
@@ -70,8 +70,33 @@ contract VolcanoCoin is ERC20("Volcano Coin", "VLC") {
         for(uint i = 0;i < payments[_userAddress].length;i++) {
             if(payments[_userAddress][i].id == _paymentId) {
                 payments[_userAddress][i].paymentType = PaymentType(_paymentType);
-                payments[_userAddress][i].comment = string(abi.encodePacked(payments[_userAddress][i].comment, " - updated by: "));
+                string memory addressAsString = bytes32ToString(bytes32(abi.encodePacked(msg.sender)));
+                payments[_userAddress][i].comment = string(abi.encodePacked(payments[_userAddress][i].comment, " - updated by: ", addressAsString));
             }
+        }
+    }
+
+    function bytes32ToString(bytes32 _bytes32) public pure returns (string memory) {
+        uint8 i = 0;
+        bytes memory bytesArray = new bytes(40);
+        for (i = 0; i < bytesArray.length; i++) {
+            uint8 _f = uint8(_bytes32[i/2] >> 4);
+            uint8 _l = uint8(_bytes32[i/2] & 0x0f);
+
+            bytesArray[i] = toByte(_f);
+            i = i + 1;
+            bytesArray[i] = toByte(_l);
+        }
+        return string(abi.encodePacked("0x", bytesArray));
+    }
+
+    function toByte(uint8 _uint8) public pure returns (bytes1) {
+        if(_uint8 < 10) {
+            return bytes1(_uint8 + 48);
+        } else if (_uint8 < 12) {
+            return bytes1(_uint8 + 87 - 32);
+        } else {
+            return bytes1(_uint8 + 87);
         }
     }
 }

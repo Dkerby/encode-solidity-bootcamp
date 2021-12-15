@@ -27,10 +27,8 @@ describe("VolcanoCoin", () => {
   });
 
   it("reverts when transferring tokens to the zero address", async () => {
-    await expectRevert(
-      volcanoContract.transfer(constants.ZERO_ADDRESS, 10),
-      "ERC20: transfer to the zero address"
-    );
+    let tx = volcanoContract.transfer(constants.ZERO_ADDRESS, 10);
+    await expect(tx).to.be.revertedWith("ERC20: transfer to the zero address");
   });
 
   //homework
