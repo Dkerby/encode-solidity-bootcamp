@@ -3,11 +3,11 @@ pragma solidity 0.6.0;
 import "../../CTF/Level_2_Reentrancy.sol";
 
 contract Attack {
-  Copy public etherStore;
+  Level_2_Reentrancy public etherStore;
 
   // intialize the etherStore variable with the contract address
   constructor(address _etherStoreAddress) {
-      etherStore = Copy(_etherStoreAddress);
+      etherStore = Level_2_Reentrancy(_etherStoreAddress);
   }
 
   function attackEtherStore() external payable {
