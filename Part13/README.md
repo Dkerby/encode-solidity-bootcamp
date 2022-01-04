@@ -1,15 +1,18 @@
-# Optimisation Game Instructions
+## Hardhat 
 
+```shell
+npx hardhat accounts
+npx hardhat compile
+npx hardhat clean
+npx hardhat test
+npx hardhat node
+npx hardhat help
+```
 
-1. Use gitpod to create a workspace
-https://github.com/ExtropyIO/Academy
-2. Open a terminal go to the GasOptimisation directory
-3. Run ``` npm i``` to install the dependencies
-4. Run ``` npx hardhat test``` to run the tests and get a gas usage report
+## Fork mainnet using ganache-cli
 
-![](https://i.imgur.com/sXcfvEj.png)
+Go to https://infura.io/ and create a new project and select Ethereum as the product. In the project's settings,find the endpoints for mainnet. Copy the https API key. You're going to connect to the Infura node to fork the mainnet.
 
-The aim of the game is to reduce the Average figures for contract deployment and transfer and updatePayment functions as much as possible.
+Run `$ npx ganache-cli --fork https://mainnet.infura.io/v3/{infura_project_id}` --unlock 0x503828976D22510aad0201ac7EC88293211D23Da 
 
-You can change the contract as much as you like.
-You **cannot** change the tests, and all the tests must pass. 
+If local port is not 8545 add -p {port_number}`
