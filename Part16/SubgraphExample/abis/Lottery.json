@@ -1,0 +1,194 @@
+[
+  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "LogAddressPaid",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "teamAddress",
+        "type": "address"
+      }
+    ],
+    "name": "LogGuessMade",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "_newSeed",
+        "type": "uint8"
+      }
+    ],
+    "name": "LogResetOracle",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "name": "LogTeamCorrectGuess",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "name": "LogTeamRegistered",
+    "type": "event"
+  },
+  { "stateMutability": "payable", "type": "fallback" },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_adminAddress", "type": "address" }
+    ],
+    "name": "addAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "admins",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTeamCount",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_num", "type": "uint256" }
+    ],
+    "name": "getTeamDetails",
+    "outputs": [
+      { "internalType": "string", "name": "", "type": "string" },
+      { "internalType": "address", "name": "", "type": "address" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint8", "name": "seed", "type": "uint8" }],
+    "name": "initialiseLottery",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_team", "type": "address" },
+      { "internalType": "uint256", "name": "_guess", "type": "uint256" }
+    ],
+    "name": "makeAGuess",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "payoutWinningTeam",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_walletAddress",
+        "type": "address"
+      },
+      { "internalType": "string", "name": "_teamName", "type": "string" },
+      { "internalType": "string", "name": "_password", "type": "string" }
+    ],
+    "name": "registerTeam",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "_newSeed", "type": "uint8" }
+    ],
+    "name": "reset",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "teamAddresses",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "teams",
+    "outputs": [
+      { "internalType": "string", "name": "name", "type": "string" },
+      { "internalType": "string", "name": "password", "type": "string" },
+      { "internalType": "uint256", "name": "points", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "thisLottery",
+    "outputs": [
+      { "internalType": "uint256", "name": "endTime", "type": "uint256" },
+      { "internalType": "uint256", "name": "seed", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

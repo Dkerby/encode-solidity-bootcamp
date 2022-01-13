@@ -1,0 +1,35 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Lottery
+    network: rinkeby
+    source:
+      address: "0x90649B117656e54aB4F2592c1E83e7145Eae1290"
+      abi: Lottery
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - LogAddressPaid
+        - LogGuessMade
+        - LogResetOracle
+        - LogTeamCorrectGuess
+        - LogTeamRegistered
+      abis:
+        - name: Lottery
+          file: ./abis/Lottery.json
+      eventHandlers:
+        - event: LogAddressPaid(address,uint256)
+          handler: handleLogAddressPaid
+        - event: LogGuessMade(address)
+          handler: handleLogGuessMade
+        - event: LogResetOracle(uint8)
+          handler: handleLogResetOracle
+        - event: LogTeamCorrectGuess(string)
+          handler: handleLogTeamCorrectGuess
+        - event: LogTeamRegistered(string)
+          handler: handleLogTeamRegistered
+      file: ./src/mapping.ts
